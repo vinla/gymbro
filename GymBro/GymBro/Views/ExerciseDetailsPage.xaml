@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GymBro.Views.ExerciseDetailsPage">
+  <StackLayout Orientation="Vertical" Padding="5">    
+    <BoxView HeightRequest="2" BackgroundColor="#cccccc" HorizontalOptions="FillAndExpand"/>
+    <Grid Padding="0,1,1,1" RowSpacing="1" ColumnSpacing="1" BackgroundColor="#E3E3E3" BindingContext="{Binding R1}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="40"/>
+        <RowDefinition Height="30"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="4"/>
+        <ColumnDefinition Width="80"/>
+        <ColumnDefinition Width="80"/>
+        <ColumnDefinition Width="120"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <BoxView VerticalOptions="Fill" HorizontalOptions="Fill" BackgroundColor="#237EFF" Grid.RowSpan="2"/>
+      <StackLayout Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Vertical" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill">
+        <Label Text="{Binding PersonName}" FontSize="16" Margin="3"/>
+        <Label Text="{Binding DatePerformed}" FontSize="12" TextColor="#999999" Margin="3"/>
+      </StackLayout>
+      <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="1" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill">
+        <Label Text="Sets: " FontSize="12"/>
+        <Label Text="{Binding Sets}" FontSize="12" TextColor="#CCCCCC"/>
+      </StackLayout>
+      <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="2" BackgroundColor="#FFFFFF">
+        <Label Text="Reps: " FontSize="12"/>
+        <Label Text="{Binding Reps}" FontSize="12" TextColor="#CCCCCC"/>
+      </StackLayout>
+      <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="3" BackgroundColor="#FFFFFF">
+        <Label Text="Weight: " FontSize="12"/>
+        <Label Text="{Binding Weight}" FontSize="12" TextColor="#CCCCCC"/>
+      </StackLayout>
+      <BoxView Grid.Row="1" Grid.Column="4" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill"/>
+    </Grid>
+    <Grid Padding="0,1,1,1" RowSpacing="1" ColumnSpacing="1" BackgroundColor="#E3E3E3" BindingContext="{Binding R2}">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="40"/>
+        <RowDefinition Height="30"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="4"/>
+        <ColumnDefinition Width="80"/>
+        <ColumnDefinition Width="80"/>
+        <ColumnDefinition Width="120"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <BoxView VerticalOptions="Fill" HorizontalOptions="Fill" BackgroundColor="#C120FF" Grid.RowSpan="2"/>
+      <StackLayout Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Vertical" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill">
+        <Label Text="{Binding PersonName}" FontSize="16" Margin="3"/>
+        <Label Text="{Binding DatePerformed}" FontSize="12" TextColor="#999999" Margin="3"/>
+      </StackLayout>
+      <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="1" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill">
+        <Label Text="Sets: " FontSize="12"/>
+        <Label Text="{Binding Sets}" FontSize="12" TextColor="#CCCCCC"/>
+      </StackLayout>
+      <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="2" BackgroundColor="#FFFFFF">
+        <Label Text="Reps: " FontSize="12"/>
+        <Label Text="{Binding Reps}" FontSize="12" TextColor="#CCCCCC"/>
+      </StackLayout>
+      <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="3" BackgroundColor="#FFFFFF">
+        <Label Text="Weight: " FontSize="12"/>
+        <Label Text="{Binding Weight}" FontSize="12" TextColor="#CCCCCC"/>
+      </StackLayout>
+      <BoxView Grid.Row="1" Grid.Column="4" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill"/>
+    </Grid>
+  </StackLayout>
+</ContentPage>
