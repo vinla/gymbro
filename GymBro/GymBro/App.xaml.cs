@@ -19,6 +19,7 @@ namespace GymBro
             _navigationManager.RegisterView<ViewModels.ExerciseListViewModel, Views.ExerciseList>();
             _navigationManager.RegisterView<ViewModels.ExerciseViewModel, Views.Exercise>();
             _navigationManager.RegisterView<ViewModels.ExerciseDetailsViewModel, Views.ExerciseDetailsPage>();
+            _navigationManager.RegisterView<ViewModels.RoutineDataViewModel, Views.RoutineDataView>();
 
             var dataConnection = DependencyService.Get<Data.IConnectionProvider>().GetConnection();
             var exerciseService = new Data.ExerciseService(dataConnection);

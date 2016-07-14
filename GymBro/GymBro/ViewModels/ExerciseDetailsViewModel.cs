@@ -45,8 +45,20 @@ namespace GymBro.ViewModels
             {
                 return new MvvmCommand(o =>
                 {
-                    var editViewModel = new ViewModels.ExerciseViewModel(_exerciseService, _navigationManager, _exercise);
+                    var editViewModel = new ViewModels.ExerciseViewModel(_exerciseService, _navigationManager, _exercise);                    
                     _navigationManager.Push(editViewModel);
+                });
+            }
+        }
+
+        public MvvmCommand DrillDown
+        {
+            get
+            {
+                return new MvvmCommand(o =>
+                {
+                    var detailViewModel = new RoutineDataViewModel(_navigationManager, _exerciseService, _exercise);
+                    _navigationManager.Push(detailViewModel);
                 });
             }
         }
@@ -61,7 +73,8 @@ namespace GymBro.ViewModels
                     DatePerformed = "04 July 2016",
                     Reps = "12",
                     Sets = "4",
-                    Weight = "25kg"
+                    Weight = "25kg",
+                    DrillDown = DrillDown
                 };
             }
         }
@@ -76,7 +89,8 @@ namespace GymBro.ViewModels
                     DatePerformed = "Never",
                     Reps = "Na",
                     Sets = "Na",
-                    Weight = "Na"
+                    Weight = "Na",
+                    DrillDown = DrillDown
                 };
             }
         }
@@ -89,5 +103,6 @@ namespace GymBro.ViewModels
         public String Reps { get; set; }
         public String Sets { get; set; }
         public String Weight { get; set; }
+        public MvvmCommand DrillDown { get; set; }
     }
 }
