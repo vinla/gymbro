@@ -43,6 +43,13 @@ namespace GymBro.Data
             _exercises.RemoveAll(ex => ex.Id == exercise.Id);
         }
 
+        public void UpdateExercise(Int32 exerciseId, String name, ExerciseCategory category)
+        {
+            var exercise = _exercises.Single(ex => ex.Id == exerciseId);
+            exercise.Name = name;
+            exercise.Category = category;
+        }
+
         public List<Routine> GetRoutines(Int32 exerciseId)
         {
             //return _routines.Where(r => r.Exercise.Id == exerciseId).ToList();

@@ -19,7 +19,7 @@ namespace GymBro.Views
         {
             var viewModel = BindingContext as Core.ViewModel;
             if (viewModel != null)
-                viewModel.OnActivating();
+                viewModel.OnActivating();            
         }
     }
 }

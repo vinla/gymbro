@@ -39,6 +39,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\MvvmListView.cs" />
+    <Compile Include="Controls\MvvmPicker.cs" />
+    <Compile Include="Core\EnumerationExtensions.cs" />
     <Compile Include="Core\MvvmCommand.cs" />
     <Compile Include="Core\NavigationManager.cs" />
     <Compile Include="Core\ViewModel.cs" />

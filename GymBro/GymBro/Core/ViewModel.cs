@@ -16,10 +16,5 @@ namespace GymBro.Core
         {
 
         }
-    }
-
-    public interface IPageWithTitle
-    {
-        String PageTitle { get; }
-    }
+    }    
 }

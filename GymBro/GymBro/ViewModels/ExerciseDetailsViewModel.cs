@@ -1,4 +1,5 @@
 ﻿using System;
+using GymBro.Core;
 
 namespace GymBro.ViewModels
 {
@@ -7,6 +8,7 @@ namespace GymBro.ViewModels
         private readonly Data.ExerciseService _exerciseService;
         private readonly Core.NavigationManager _navigationManager;
         private readonly Models.Exercise _exercise;
+        private Boolean _optionsVisible;
 
         public ExerciseDetailsViewModel(Core.NavigationManager navigationManager, Data.ExerciseService exerciseService, Models.Exercise exercise)
         {
@@ -15,9 +17,38 @@ namespace GymBro.ViewModels
             _exercise = exercise;
         }
 
-        public String PageTitle
+        public String ExerciseName
         {
             get { return _exercise.Name; }
+        }
+
+        public Boolean OptionsVisible
+        {
+            get {  return _optionsVisible; }
+            set { _optionsVisible = value; RaisePropertyChanged("OptionsVisible"); }
+        }
+
+        public MvvmCommand ToggleOptions
+        {
+            get
+            {
+                return new MvvmCommand(o =>
+                {
+                    OptionsVisible = !OptionsVisible;
+                });
+            }
+        }
+
+        public MvvmCommand Edit
+        {
+            get
+            {
+                return new MvvmCommand(o =>
+                {
+                    var editViewModel = new ViewModels.ExerciseViewModel(_exerciseService, _navigationManager, _exercise);
+                    _navigationManager.Push(editViewModel);
+                });
+            }
         }
 
         public RoutineViewModel R1

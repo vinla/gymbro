@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using GymBro.Core;
 using Xamarin.Forms;
 
 namespace GymBro.Views
@@ -13,6 +13,6 @@ namespace GymBro.Views
         public ExerciseDetailsPage()
         {
             InitializeComponent();
-        }
+        }        
     }
 }

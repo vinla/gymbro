@@ -29,7 +29,7 @@
       </c:MvvmListView.ItemTemplate>
     </c:MvvmListView>
     <StackLayout VerticalOptions="End" Padding="15">
-      <Button Text="Add Exercise" Command="{Binding AddExercise}"/>      
+      <Button Text="Add Exercise" Command="{Binding AddExercise}"/>
     </StackLayout>
   </StackLayout>
 </ContentPage>

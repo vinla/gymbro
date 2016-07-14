@@ -2,8 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GymBro.Views.ExerciseDetailsPage">
-  <StackLayout Orientation="Vertical" Padding="5">    
+  <StackLayout Orientation="Vertical" Padding="5">
+    <Label Margin="3" Text="{Binding ExerciseName}" FontAttributes="Bold" FontSize="14">
+      <Label.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding ToggleOptions}"></TapGestureRecognizer>
+      </Label.GestureRecognizers>
+    </Label>
     <BoxView HeightRequest="2" BackgroundColor="#cccccc" HorizontalOptions="FillAndExpand"/>
+    <StackLayout Orientation="Horizontal" Padding="5" IsVisible="{Binding OptionsVisible}">
+      <Button Text="Edit Exercise" Command="{Binding Edit}"/>
+      <Button Text="Delete Exercise" Command="{Binding Delete}"/>
+    </StackLayout>
+    <BoxView HeightRequest="2" BackgroundColor="#cccccc" HorizontalOptions="FillAndExpand" IsVisible="{Binding OptionsVisible}"/>
     <Grid Padding="0,1,1,1" RowSpacing="1" ColumnSpacing="1" BackgroundColor="#E3E3E3" BindingContext="{Binding R1}">
       <Grid.RowDefinitions>
         <RowDefinition Height="40"/>

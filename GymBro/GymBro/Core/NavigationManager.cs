@@ -9,7 +9,7 @@ namespace GymBro.Core
 {
     public class NavigationManager
     {
-        private Dictionary<Type, Type> _lookup;
+        private readonly Dictionary<Type, Type> _lookup;
         private NavigationPage _navigationPage;
 
         public NavigationManager()
@@ -28,21 +28,14 @@ namespace GymBro.Core
         public NavigationPage GetRoot(object rootViewModel)
         {
             var rootPage = CreatePage(rootViewModel);
-            _navigationPage = new NavigationPage(rootPage);
+            _navigationPage = new NavigationPage(rootPage);            
             return _navigationPage;
         }
 
         public async void Push(object viewModel)
         {
-            var page = CreatePage(viewModel);
-            var titledPage = viewModel as IPageWithTitle;
-
-            if (titledPage != null)
-            {
-                _navigationPage.Title = titledPage.PageTitle;
-                page.Title = titledPage.PageTitle;
-            }
-            await _navigationPage.PushAsync(page);
+            var page = CreatePage(viewModel);                     
+            await _navigationPage.PushAsync(page);            
         }
 
         private Page CreatePage(object viewModel)
@@ -52,7 +45,7 @@ namespace GymBro.Core
 
             var page = Activator.CreateInstance(viewType) as Page;
             page.BindingContext = viewModel;
-            
+            NavigationPage.SetHasNavigationBar(page, false);
             return page;
         }
 
