@@ -28,14 +28,17 @@ namespace GymBro.Core
         public NavigationPage GetRoot(object rootViewModel)
         {
             var rootPage = CreatePage(rootViewModel);
-            _navigationPage = new NavigationPage(rootPage);            
+            _navigationPage = new NavigationPage(rootPage);
+            CallOnActivating();
+            _navigationPage.Popped += (sender, args) => CallOnActivating();
+            _navigationPage.Pushed += (sender, args) => CallOnActivating();
             return _navigationPage;
         }
 
         public async void Push(object viewModel)
         {
             var page = CreatePage(viewModel);                     
-            await _navigationPage.PushAsync(page);            
+            await _navigationPage.PushAsync(page);                        
         }
 
         private Page CreatePage(object viewModel)
@@ -49,9 +52,15 @@ namespace GymBro.Core
             return page;
         }
 
+        private void CallOnActivating()
+        {
+            var viewModel = _navigationPage.CurrentPage.BindingContext as ViewModel;
+            viewModel?.OnActivating();
+        }
+
         public async void Return()
         {
-            await _navigationPage.Navigation.PopAsync();
+            await _navigationPage.Navigation.PopAsync();                    
         }
 
         public async void DisplayAlert(String alertTitle, String alertText, String buttonText)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using GymBro.Data;
 using Xamarin.Forms;
 
 namespace GymBro
@@ -20,8 +20,11 @@ namespace GymBro
             _navigationManager.RegisterView<ViewModels.ExerciseViewModel, Views.Exercise>();
             _navigationManager.RegisterView<ViewModels.ExerciseDetailsViewModel, Views.ExerciseDetailsPage>();
             _navigationManager.RegisterView<ViewModels.RoutineDataViewModel, Views.RoutineDataView>();
+            _navigationManager.RegisterView<ViewModels.AddEntryViewModel, Views.AddEntryView>();
 
             var dataConnection = DependencyService.Get<Data.IConnectionProvider>().GetConnection();
+            Database.Initialise(dataConnection);
+            
             var exerciseService = new Data.ExerciseService(dataConnection);
             var mainViewModel = new ViewModels.ExerciseListViewModel(exerciseService, _navigationManager);
 

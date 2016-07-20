@@ -1,95 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GymBro.Core;
 using GymBro.Models;
 
 namespace GymBro.ViewModels
 {
-    public class RoutineDataViewModel
+    public class RoutineDataViewModel : ViewModel
     {
         private readonly Data.ExerciseService _exerciseService;
-        private readonly Core.NavigationManager _navigationManager;
-        private readonly Models.Exercise _exercise;
-        private readonly Models.Person _person;
-        private readonly List<Models.Routine> _routines;
+        private readonly NavigationManager _navigationManager;
+        private readonly Exercise _exercise;
+        private readonly Person _person;
 
-        public RoutineDataViewModel(Core.NavigationManager navigationManager, Data.ExerciseService exerciseService, Models.Exercise exercise)
+        public RoutineDataViewModel(Core.NavigationManager navigationManager, Data.ExerciseService exerciseService, Models.Exercise exercise, Models.Person person)
         {
             _navigationManager = navigationManager;
             _exerciseService = exerciseService;
             _exercise = exercise;
-            _person = new Person
-            {
-                Id = 1,
-                DisplayName = "Vincent",
-                FullName = "Vincent Crowe",
-                Initials = "VC",
-                ColorCode = "#ffffff"
-            };
-
-            _routines = new List<Routine>();
-            _routines.Add(new Routine
-            {
-                Exercise = _exercise,
-                Person = _person,
-                PerformedOn = new DateTime(2016, 4, 15),
-                NumberOfReps = 12,
-                NumberOfSets = 4,
-                WeightInKilos = 25
-            });
-            _routines.Add(new Routine
-            {
-                Exercise = _exercise,
-                Person = _person,
-                PerformedOn = new DateTime(2016, 4, 23),
-                NumberOfReps = 12,
-                NumberOfSets = 4,
-                WeightInKilos = 25
-            });
-            _routines.Add(new Routine
-            {
-                Exercise = _exercise,
-                Person = _person,
-                PerformedOn = new DateTime(2016, 5, 6),
-                NumberOfReps = 10,
-                NumberOfSets = 4,
-                WeightInKilos = 30
-            });
-            _routines.Add(new Routine
-            {
-                Exercise = _exercise,
-                Person = _person,
-                PerformedOn = new DateTime(2016, 5, 15),
-                NumberOfReps = 12,
-                NumberOfSets = 4,
-                WeightInKilos = 30
-            });
-            _routines.Add(new Routine
-            {
-                Exercise = _exercise,
-                Person = _person,
-                PerformedOn = new DateTime(2016, 5, 22),
-                NumberOfReps = 10,
-                NumberOfSets = 5,
-                WeightInKilos = 35
-            });
+            _person = person;            
         }
 
-        public String PersonName
-        {
-            get { return _person.DisplayName; }            
-        }
+        public String PersonName => _person.DisplayName;
 
-        public String ExerciseName
-        {
-            get { return _exercise.Name; }
-        }
+        public String ExerciseName => _exercise.Name;
 
         public List<Routine> Data
         {
-            get { return _routines.OrderByDescending(d => d.PerformedOn).ToList(); }
+            get
+            {
+                return
+                    _exerciseService.GetRoutines(_exercise.Id, _person.Id)
+                        .OrderByDescending(r => r.PerformedOn)
+                        .ToList();
+            }
+        }
+
+        public MvvmCommand AddEntry
+        {
+            get
+            {
+                return new MvvmCommand(o =>
+                {
+                    var viewModel = new AddEntryViewModel(_navigationManager, _exerciseService, _exercise, _person);
+                    _navigationManager.Push(viewModel);
+                });
+            }
+        }
+
+        public override void OnActivating()
+        {
+            RaisePropertyChanged("Data");
         }
     }
 }

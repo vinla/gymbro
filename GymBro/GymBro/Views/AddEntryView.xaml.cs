@@ -8,11 +8,11 @@ using Xamarin.Forms;
 
 namespace GymBro.Views
 {
-    public partial class ExerciseList : ContentPage
+    public partial class AddEntryView : ContentPage
     {
-        public ExerciseList()
+        public AddEntryView()
         {
             InitializeComponent();
-        }        
+        }
     }
 }

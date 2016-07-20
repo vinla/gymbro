@@ -56,8 +56,7 @@ namespace GymBro.ViewModels
                 return new Core.MvvmCommand(o =>
                 {
                     if (_exercise.Id == -1)
-                    {
-                        _exercise.Id = _exerciseService.GetExercises().Max(ex => ex.Id) + 1;
+                    {                        
                         _exerciseService.AddExercise(_exercise);
                     }
                     else

@@ -45,14 +45,22 @@
     <Compile Include="Core\MvvmCommand.cs" />
     <Compile Include="Core\NavigationManager.cs" />
     <Compile Include="Core\ViewModel.cs" />
+    <Compile Include="Data\DatabaseInitializer.cs" />
     <Compile Include="Data\ExerciseService.cs" />
     <Compile Include="Data\IConnectionProvider.cs" />
+    <Compile Include="Models\EntityBase.cs" />
     <Compile Include="Models\Exercise.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="Models\Routine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\AddEntryViewModel.cs" />
     <Compile Include="ViewModels\ExerciseDetailsViewModel.cs" />
     <Compile Include="ViewModels\ExerciseListViewModel.cs" />
     <Compile Include="ViewModels\ExerciseViewModel.cs" />
     <Compile Include="ViewModels\RoutineDataViewModel.cs" />
+    <Compile Include="Views\AddEntryView.xaml.cs">
+      <DependentUpon>AddEntryView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Exercise.xaml.cs">
       <DependentUpon>Exercise.xaml</DependentUpon>
     </Compile>
@@ -122,6 +130,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\RoutineDataView.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\AddEntryView.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

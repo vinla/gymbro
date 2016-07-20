@@ -1,16 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using GymBro.Core;
 
 namespace GymBro.ViewModels
 {
-    public class ExerciseDetailsViewModel : Core.ViewModel
+    public class ExerciseDetailsViewModel : ViewModel
     {
         private readonly Data.ExerciseService _exerciseService;
-        private readonly Core.NavigationManager _navigationManager;
-        private readonly Models.Exercise _exercise;
+        private readonly NavigationManager _navigationManager;
+        private Models.Exercise _exercise;
         private Boolean _optionsVisible;
 
-        public ExerciseDetailsViewModel(Core.NavigationManager navigationManager, Data.ExerciseService exerciseService, Models.Exercise exercise)
+        public ExerciseDetailsViewModel(NavigationManager navigationManager, Data.ExerciseService exerciseService, Models.Exercise exercise)
         {
             _exerciseService = exerciseService;
             _navigationManager = navigationManager;
@@ -51,58 +53,97 @@ namespace GymBro.ViewModels
             }
         }
 
+        public MvvmCommand Delete
+        {
+            get
+            {
+                return new MvvmCommand(async o =>
+                {
+                    if (
+                        await
+                            _navigationManager.DisplayAlert("Confirm delete",
+                                "Are you sure you want to delete this exercise. All related data will be deleted and this action cannot be undone",
+                                "Delete", "Keep"))
+                    {
+                        _exerciseService.DeleteExercise(_exercise.Id);
+                        _navigationManager.Return();
+                    }
+                });
+            }
+        }
+
         public MvvmCommand DrillDown
         {
             get
             {
                 return new MvvmCommand(o =>
                 {
-                    var detailViewModel = new RoutineDataViewModel(_navigationManager, _exerciseService, _exercise);
+                    var person = o as Models.Person;
+
+                    if(person == null)
+                        throw new InvalidOperationException();
+
+                    var detailViewModel = new RoutineDataViewModel(_navigationManager, _exerciseService, _exercise, person);
                     _navigationManager.Push(detailViewModel);
                 });
             }
         }
 
-        public RoutineViewModel R1
+        public List<RoutineViewModel> PersonData
         {
             get
             {
-                return new RoutineViewModel
+                var routineViewModels = new List<RoutineViewModel>();
+                var persons = _exerciseService.GetPersons();
+                foreach (var person in persons)
                 {
-                    PersonName = "Vincent",
-                    DatePerformed = "04 July 2016",
-                    Reps = "12",
-                    Sets = "4",
-                    Weight = "25kg",
-                    DrillDown = DrillDown
-                };
+                    var latestRoutine = _exerciseService.GetRoutines(_exercise.Id, person.Id).OrderByDescending(r => r.PerformedOn).FirstOrDefault();
+                    if (latestRoutine != null)
+                    {
+                        routineViewModels.Add(new RoutineViewModel
+                        {
+                            Person = person,
+                            DatePerformed = latestRoutine.PerformedOn.ToString("dd-MMMM-yyyy"),
+                            Reps = latestRoutine.NumberOfReps.ToString(),
+                            Sets = latestRoutine.NumberOfSets.ToString(),
+                            Weight = latestRoutine.WeightInKilos.ToString(),
+                            Colour = person.ColorCode
+                        });
+                    }
+                    else
+                    {
+                        routineViewModels.Add(new RoutineViewModel
+                        {
+                            Person = person,
+                            DatePerformed = "No records",
+                            Reps = "N/A",
+                            Sets = "N/A",
+                            Weight = "N/A",
+                            Colour = person.ColorCode
+                        });
+                    }
+                }
+
+                return routineViewModels;
             }
         }
 
-        public RoutineViewModel R2
+        public override void OnActivating()
         {
-            get
-            {
-                return new RoutineViewModel
-                {
-                    PersonName = "Kim",
-                    DatePerformed = "Never",
-                    Reps = "Na",
-                    Sets = "Na",
-                    Weight = "Na",
-                    DrillDown = DrillDown
-                };
-            }
+            OptionsVisible = false;
+            RaisePropertyChanged("PersonData");
+            _exercise = _exerciseService.GetExercises().Single(ex => ex.Id == _exercise.Id);
+            RaisePropertyChanged("ExerciseName");
         }
     }
 
     public class RoutineViewModel
     {
-        public String PersonName { get; set; }
+        public Models.Person Person { get; set; }
         public String DatePerformed { get; set; }
         public String Reps { get; set; }
         public String Sets { get; set; }
         public String Weight { get; set; }
-        public MvvmCommand DrillDown { get; set; }
+        public String Colour { get; set; }
     }
 }

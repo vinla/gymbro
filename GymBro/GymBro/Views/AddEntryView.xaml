@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GymBro.Views.AddEntryView">
+  <StackLayout Padding="5">
+    <Label VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Text="{Binding Exercise.Name}" FontSize="12" />
+    <Label VerticalOptions="CenterAndExpand" HorizontalOptions="Center" Text="{Binding Person.DisplayName}" FontSize="12" />
+    <BoxView HeightRequest="2" BackgroundColor="#cccccc" HorizontalOptions="FillAndExpand"/>
+    <Label VerticalOptions="CenterAndExpand" Text="Date"/>
+    <DatePicker VerticalOptions="CenterAndExpand" Date="{Binding PerformedOn}" MaximumDate="{Binding MaxDate}" MinimumDate="{Binding MinDate}">
+      <DatePicker.Format>yyyy-MMM-dd</DatePicker.Format>      
+    </DatePicker>
+    <Label VerticalOptions="CenterAndExpand" Text="Number of Sets"/>
+    <Entry VerticalOptions="CenterAndExpand" Text="{Binding NumberOfSets}" Keyboard="Numeric"></Entry>
+    <Label VerticalOptions="CenterAndExpand" Text="Number of Reps"/>
+    <Entry VerticalOptions="CenterAndExpand" Text="{Binding NumberOfReps}" Keyboard="Numeric"></Entry>
+    <Label VerticalOptions="CenterAndExpand" Text="Weight In Kilos"/>
+    <Entry VerticalOptions="CenterAndExpand" Text="{Binding WeightInKilos}" Keyboard="Numeric"></Entry>
+    <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" Orientation="Horizontal">
+      <Button Text="Cancel" HorizontalOptions="Center" Command="{Binding Cancel}"/>
+      <Button Text="Save" HorizontalOptions="Center" Command="{Binding Save}"/>
+    </StackLayout>
+  </StackLayout>
+</ContentPage>

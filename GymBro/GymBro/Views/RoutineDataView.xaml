@@ -4,8 +4,11 @@
              xmlns:c="clr-namespace:GymBro.Controls;assembly=GymBro"
              x:Class="GymBro.Views.RoutineDataView">
   <StackLayout Orientation="Vertical">
-    <Label Margin="3" Text="{Binding ExerciseName}"/>
-    <Label Margin="3" Text="{Binding PersonName}"/>
+    <Label Margin="8,2,2,2" Text="{Binding ExerciseName}" FontSize="14"/>
+    <StackLayout Orientation="Horizontal" Padding="5">
+      <Label Margin="3" Text="{Binding PersonName}" FontSize="14" HorizontalOptions="StartAndExpand"/>
+      <Button Text="Add Entry" HorizontalOptions="End" Command="{Binding AddEntry}"/>
+    </StackLayout>    
     <c:RepeaterView x:Name="rv" ItemsSource="{Binding Data}">
       <c:RepeaterView.ItemTemplate>
         <DataTemplate>
