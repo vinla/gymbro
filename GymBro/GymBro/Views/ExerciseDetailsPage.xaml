@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:c="clr-namespace:GymBro.Controls;assembly=GymBro"
              x:Class="GymBro.Views.ExerciseDetailsPage">
-  <StackLayout Orientation="Vertical">
+<RelativeLayout Margin="1">
+  <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}">
     <Frame OutlineColor="Silver">
       <Label Margin="3" Text="{Binding ExerciseName}" FontAttributes="Bold" FontSize="14" HorizontalTextAlignment="Center">
         <Label.GestureRecognizers>
@@ -16,46 +17,57 @@
       <Button Text="Delete Exercise" Command="{Binding Delete}"/>
     </StackLayout>
     <BoxView HeightRequest="2" BackgroundColor="#cccccc" HorizontalOptions="FillAndExpand" IsVisible="{Binding OptionsVisible}"/>
-    <c:RepeaterView x:Name="rv" ItemsSource="{Binding PersonData}" Margin="10">
-      <c:RepeaterView.ItemTemplate>
+    <Frame OutlineColor="Silver" Padding="2">
+      <StackLayout Orientation="Horizontal">
+        <Image HorizontalOptions="Start" HeightRequest="48" WidthRequest="48" Source="left_arrow.png">
+          <Image.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding PreviousPerson}" />
+          </Image.GestureRecognizers>
+        </Image>
+        <Label FontSize="14" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Text="{Binding CurrentPerson.DisplayName}"/>
+        <Image HorizontalOptions="End" HeightRequest="48" WidthRequest="48" Source="right_arrow.png">
+          <Image.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding NextPerson}" />
+          </Image.GestureRecognizers>
+        </Image>
+      </StackLayout>
+    </Frame>
+    <ListView 
+             ItemsSource="{Binding ExerciseData}"
+             IsGroupingEnabled="True"
+             GroupDisplayBinding="{Binding Key}"
+             HasUnevenRows="True"
+             Margin="5">
+      <ListView.GroupHeaderTemplate>
         <DataTemplate>
-          <Grid Padding="0,1,1,1" RowSpacing="1" ColumnSpacing="1" BackgroundColor="#E3E3E3">
-            <Grid.RowDefinitions>
-              <RowDefinition Height="40"/>
-              <RowDefinition Height="30"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="4"/>
-              <ColumnDefinition Width="80"/>
-              <ColumnDefinition Width="80"/>
-              <ColumnDefinition Width="120"/>
-              <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <BoxView VerticalOptions="Fill" HorizontalOptions="Fill" BackgroundColor="{Binding Colour}" Grid.RowSpan="2"/>
-            <StackLayout Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="4" Orientation="Vertical" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill">
-              <Label Text="{Binding Person.DisplayName}" FontSize="16" Margin="3">
-                <Label.GestureRecognizers>
-                  <TapGestureRecognizer Command="{Binding Source={x:Reference rv}, Path=BindingContext.DrillDown}" CommandParameter="{Binding Person}"></TapGestureRecognizer>
-                </Label.GestureRecognizers>
-              </Label>
-              <Label Text="{Binding DatePerformed}" FontSize="12" TextColor="#999999" Margin="3"/>
+          <ViewCell Height="25">
+            <StackLayout VerticalOptions="FillAndExpand"
+                         Padding="5"
+                         BackgroundColor="#3498DB">
+              <Label Text="{Binding Key}" TextColor="White" VerticalOptions="Center"/>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="1" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill">
-              <Label Text="Sets: " FontSize="12"/>
-              <Label Text="{Binding Sets}" FontSize="12" TextColor="#CCCCCC"/>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="2" BackgroundColor="#FFFFFF">
-              <Label Text="Reps: " FontSize="12"/>
-              <Label Text="{Binding Reps}" FontSize="12" TextColor="#CCCCCC"/>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" Grid.Row="1" Grid.Column="3" BackgroundColor="#FFFFFF">
-              <Label Text="Weight: " FontSize="12"/>
-              <Label Text="{Binding Weight}" FontSize="12" TextColor="#CCCCCC"/>
-            </StackLayout>
-            <BoxView Grid.Row="1" Grid.Column="4" BackgroundColor="#FFFFFF" VerticalOptions="Fill" HorizontalOptions="Fill"/>
-          </Grid>
+          </ViewCell>
         </DataTemplate>
-      </c:RepeaterView.ItemTemplate>
-    </c:RepeaterView>      
+      </ListView.GroupHeaderTemplate>
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <StackLayout Orientation="Horizontal">
+              <Label FontSize="20" FontAttributes="Bold" BackgroundColor="{Binding BackColor}" TextColor="White" WidthRequest="40" HorizontalTextAlignment="Center" VerticalOptions="Center" Margin="2" Text="{Binding Initials}"/>
+              <Label Text="{Binding Info}" VerticalOptions="Center" FontSize="14" Margin="5,0,0,0"/>
+            </StackLayout>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
   </StackLayout>
+  <Image
+     RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.90}"
+     RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.85}"
+     HeightRequest="48" WidthRequest="48" Source="add.png">
+    <Image.GestureRecognizers>
+      <TapGestureRecognizer Command="{Binding AddEntry}" />
+    </Image.GestureRecognizers>
+  </Image>
+</RelativeLayout>
 </ContentPage>

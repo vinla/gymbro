@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using GymBro.Core;
+using GymBro.Models;
 
 namespace GymBro.ViewModels
 {
@@ -9,14 +11,18 @@ namespace GymBro.ViewModels
     {
         private readonly Data.ExerciseService _exerciseService;
         private readonly NavigationManager _navigationManager;
+        private readonly List<Person> _people;
         private Models.Exercise _exercise;
         private Boolean _optionsVisible;
-
+        private int _currentPerson;
+        
         public ExerciseDetailsViewModel(NavigationManager navigationManager, Data.ExerciseService exerciseService, Models.Exercise exercise)
         {
             _exerciseService = exerciseService;
             _navigationManager = navigationManager;
             _exercise = exercise;
+            _people = _exerciseService.GetPersons().ToList();
+            _currentPerson = -1;
         }
 
         public String ExerciseName
@@ -72,64 +78,85 @@ namespace GymBro.ViewModels
             }
         }
 
-        public MvvmCommand DrillDown
+        public MvvmCommand AddEntry
         {
             get
             {
                 return new MvvmCommand(o =>
                 {
-                    var person = o as Models.Person;
-
-                    if(person == null)
-                        throw new InvalidOperationException();
-
-                    var detailViewModel = new RoutineDataViewModel(_navigationManager, _exerciseService, _exercise, person);
-                    _navigationManager.Push(detailViewModel);
+                    if (_currentPerson > -1)
+                    {
+                        var viewModel = new AddEntryViewModel(_navigationManager, _exerciseService, _exercise, CurrentPerson);
+                        _navigationManager.Push(viewModel);
+                    }
                 });
             }
         }
 
-        public List<RoutineViewModel> PersonData
+        public Person CurrentPerson
         {
             get
             {
-                var routineViewModels = new List<RoutineViewModel>();
-                var persons = _exerciseService.GetPersons();
-                foreach (var person in persons)
+                if (_currentPerson == -1)
+                    return new Person {Id = -1, DisplayName = "Everyone"};
+                else
                 {
-                    var latestRoutine = _exerciseService.GetRoutines(_exercise.Id, person.Id).OrderByDescending(r => r.PerformedOn).FirstOrDefault();
-                    if (latestRoutine != null)
-                    {
-                        routineViewModels.Add(new RoutineViewModel
-                        {
-                            Person = person,
-                            DatePerformed = latestRoutine.PerformedOn.ToString("dd-MMMM-yyyy"),
-                            Reps = latestRoutine.NumberOfReps.ToString(),
-                            Sets = latestRoutine.NumberOfSets.ToString(),
-                            Weight = latestRoutine.WeightInKilos.ToString(),
-                            Colour = person.ColorCode
-                        });
-                    }
-                    else
-                    {
-                        routineViewModels.Add(new RoutineViewModel
-                        {
-                            Person = person,
-                            DatePerformed = "No records",
-                            Reps = "N/A",
-                            Sets = "N/A",
-                            Weight = "N/A",
-                            Colour = person.ColorCode
-                        });
-                    }
+                    return _people[_currentPerson];
                 }
+            }
+        }
 
-                return routineViewModels;
+        public MvvmCommand NextPerson
+        {
+            get
+            {
+                return new MvvmCommand(o =>
+                {
+                    _currentPerson++;
+                    if (_currentPerson >= _people.Count)
+                        _currentPerson = -1;
+                    RaisePropertyChanged("CurrentPerson");
+                    RaisePropertyChanged("ExerciseData");
+                });
+            }
+        }
+
+        public MvvmCommand PreviousPerson
+        {
+            get
+            {
+                return new MvvmCommand(o =>
+                {
+                    _currentPerson--;
+                    if (_currentPerson < -1)
+                        _currentPerson = _people.Count - 1;
+                    RaisePropertyChanged("CurrentPerson");
+                    RaisePropertyChanged("ExerciseData");
+                });
+            }
+        }       
+
+        public IEnumerable<IGrouping<String, ExerciseInfo>> ExerciseData
+        {
+            get
+            {
+                var data = _exerciseService.GetRoutines(_exercise.Id);
+                if (_currentPerson > -1)
+                    data = data.Where(ex => ex.Person.Id == CurrentPerson.Id).ToList();
+
+                return data.Select(ex => new ExerciseInfo
+                {
+                    Date = ex.PerformedOn.ToString("dd-MMM-yyyy"),
+                    BackColor = ex.Person.ColorCode,
+                    Initials = ex.Person.Initials,
+                    Info = String.Format("Sets: {0} | Reps: {1} | Weight: {2}", ex.NumberOfSets, ex.NumberOfReps, ex.WeightInKilos)
+                })
+                .GroupBy(ex => ex.Date);
             }
         }
 
         public override void OnActivating()
-        {
+        {            
             OptionsVisible = false;
             RaisePropertyChanged("PersonData");
             _exercise = _exerciseService.GetExercises().Single(ex => ex.Id == _exercise.Id);
@@ -137,13 +164,23 @@ namespace GymBro.ViewModels
         }
     }
 
-    public class RoutineViewModel
+    public class ExerciseInfo
     {
-        public Models.Person Person { get; set; }
-        public String DatePerformed { get; set; }
-        public String Reps { get; set; }
-        public String Sets { get; set; }
-        public String Weight { get; set; }
-        public String Colour { get; set; }
+        public String Date { get; set; }
+        public String BackColor { get; set; }
+        public String Initials { get; set; }
+        public String Info { get; set; }
+    }
+
+    public class Grouping<TKey, TData> : ObservableCollection<TData>
+    {
+        public TKey Key { get; private set; }
+
+        public Grouping(TKey key, IEnumerable<TData> items)
+        {
+            Key = key;
+            foreach (var item in items)
+                this.Items.Add(item);
+        }
     }
 }
