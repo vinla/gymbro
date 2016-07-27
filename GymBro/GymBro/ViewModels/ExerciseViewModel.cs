@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using GymBro.Core;
 using GymBro.Models;
@@ -10,19 +9,19 @@ namespace GymBro.ViewModels
     public class ExerciseViewModel
     {
         private readonly Data.ExerciseService _exerciseService;
-        private readonly Models.Exercise _exercise;
-        private readonly Core.NavigationManager _navigationManager;
-        private readonly List<Models.ExerciseCategory> _categories;
+        private readonly Exercise _exercise;
+        private readonly NavigationManager _navigationManager;
+        private readonly List<ExerciseCategory> _categories;
 
-        public ExerciseViewModel(Data.ExerciseService exerciseService, Core.NavigationManager navigationManager)
+        public ExerciseViewModel(Data.ExerciseService exerciseService, NavigationManager navigationManager)
         {
             _navigationManager = navigationManager;
             _exerciseService = exerciseService;
             _exercise = new Exercise {Id = -1, Category = ExerciseCategory.Misc };
-            _categories = EnumerationExtensions.EnumToList<Models.ExerciseCategory>().Skip(1).ToList();
+            _categories = EnumerationExtensions.EnumToList<ExerciseCategory>().Skip(1).ToList();
         }
 
-        public ExerciseViewModel(Data.ExerciseService exerciseService, Core.NavigationManager navigationManager, Models.Exercise exercise)
+        public ExerciseViewModel(Data.ExerciseService exerciseService, NavigationManager navigationManager, Exercise exercise)
         {
             _navigationManager = navigationManager;
             _exerciseService = exerciseService;
@@ -32,8 +31,10 @@ namespace GymBro.ViewModels
                 Name = exercise.Name,
                 Category = exercise.Category
             };
-            _categories = EnumerationExtensions.EnumToList<Models.ExerciseCategory>().Skip(1).ToList();
+            _categories = EnumerationExtensions.EnumToList<ExerciseCategory>().Skip(1).ToList();
         }
+
+        public String PageTitle => _exercise.Id > -1 ? "Edit exercise" : "New exercise";
 
         public String Name
         {
@@ -41,19 +42,19 @@ namespace GymBro.ViewModels
             set { _exercise.Name = value; }
         }
 
-        public List<Models.ExerciseCategory> Categories { get { return _categories;} }
+        public List<ExerciseCategory> Categories => _categories;
 
-        public Models.ExerciseCategory SelectedCategory
+        public ExerciseCategory SelectedCategory
         {
             get { return _exercise.Category; }
             set { _exercise.Category = value; }
         }
         
-        public Core.MvvmCommand Save
+        public MvvmCommand Save
         {
             get
             {
-                return new Core.MvvmCommand(o =>
+                return new MvvmCommand(o =>
                 {
                     if (_exercise.Id == -1)
                     {                        
@@ -68,11 +69,11 @@ namespace GymBro.ViewModels
             }
         }
 
-        public Core.MvvmCommand Cancel
+        public MvvmCommand Cancel
         {
             get
             {
-                return new Core.MvvmCommand(o =>
+                return new MvvmCommand(o =>
                 {
                     _navigationManager.Return();
                 });

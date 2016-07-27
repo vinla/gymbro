@@ -3,33 +3,45 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:c="clr-namespace:GymBro.Controls;assembly:GymBro"
              x:Class="GymBro.Views.ExerciseList">
-  <StackLayout Orientation="Vertical">
-    <StackLayout Orientation="Horizontal" Padding="5">
-      <Image HorizontalOptions="Start" HeightRequest="48" WidthRequest="48" Source="left_arrow.png">
-        <Image.GestureRecognizers>
-          <TapGestureRecognizer Command="{Binding PreviousFilter}" />
-        </Image.GestureRecognizers>
-      </Image>
-      <Label FontSize="14" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Text="{Binding CurrentFilterName}"/>
-      <Image HorizontalOptions="End" HeightRequest="48" WidthRequest="48" Source="right_arrow.png">
-        <Image.GestureRecognizers>
-          <TapGestureRecognizer Command="{Binding NextFilter}" />
-        </Image.GestureRecognizers>
-      </Image>
+  <RelativeLayout Margin="1">
+    <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1}">
+      <Frame OutlineColor="Silver" Padding="2">
+        <StackLayout Orientation="Horizontal">      
+          <Image HorizontalOptions="Start" HeightRequest="48" WidthRequest="48" Source="left_arrow.png">
+            <Image.GestureRecognizers>
+              <TapGestureRecognizer Command="{Binding PreviousFilter}" />
+            </Image.GestureRecognizers>
+          </Image>
+          <Label FontSize="14" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Text="{Binding CurrentFilterName}"/>
+          <Image HorizontalOptions="End" HeightRequest="48" WidthRequest="48" Source="right_arrow.png">
+            <Image.GestureRecognizers>
+              <TapGestureRecognizer Command="{Binding NextFilter}" />
+            </Image.GestureRecognizers>
+          </Image>
+        </StackLayout>
+      </Frame>
+      <c:MvvmListView ItemsSource="{Binding Exercises}" ItemSelectedCommand="{Binding ShowDetails}"  VerticalOptions="FillAndExpand" Margin="5">
+        <c:MvvmListView.ItemTemplate>
+          <DataTemplate>
+            <ViewCell>
+              <ViewCell.View>
+                <StackLayout Orientation="Horizontal">
+                  <Label FontSize="20" FontAttributes="Bold" BackgroundColor="{Binding BackColor}" TextColor="{Binding TextColor}" WidthRequest="40" HorizontalTextAlignment="Center" VerticalOptions="Center" Margin="2" Text="{Binding CategoryDisplay}"/>
+                  <Label Text="{Binding Name}" VerticalOptions="Center" FontSize="14" Margin="5,0,0,0"/>
+                </StackLayout>                
+              </ViewCell.View>
+            </ViewCell>
+          </DataTemplate>
+        </c:MvvmListView.ItemTemplate>
+      </c:MvvmListView>          
     </StackLayout>
-    <c:MvvmListView ItemsSource="{Binding Exercises}" ItemSelectedCommand="{Binding ShowDetails}"  VerticalOptions="FillAndExpand">
-      <c:MvvmListView.ItemTemplate>
-        <DataTemplate>
-          <ViewCell>
-            <ViewCell.View>
-              <Label Text="{Binding Name}" FontSize="14" Margin="5,0,0,0"/>
-            </ViewCell.View>
-          </ViewCell>
-        </DataTemplate>
-      </c:MvvmListView.ItemTemplate>
-    </c:MvvmListView>
-    <StackLayout VerticalOptions="End" Padding="15">
-      <Button Text="Add Exercise" Command="{Binding AddExercise}"/>
-    </StackLayout>
-  </StackLayout>
+    <Image 
+      RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.90}"
+      RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.85}"
+      HeightRequest="48" WidthRequest="48" Source="add.png">
+      <Image.GestureRecognizers>
+              <TapGestureRecognizer Command="{Binding AddExercise}" />
+            </Image.GestureRecognizers>    
+        </Image>      
+  </RelativeLayout>
 </ContentPage>
