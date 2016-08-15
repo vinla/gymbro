@@ -93,6 +93,40 @@ namespace GymBro.ViewModels
             }
         }
 
+        public MvvmCommand DeleteEntry
+        {
+            get
+            {
+                return new MvvmCommand(async o =>
+                {
+                    if (SelectedItem == null)
+                        return;
+
+                    var performDelete = await _navigationManager.DisplayAlert("Delete Entry?", "Do you want to delete this entry", "Delete", "Keep");
+                    if(performDelete)
+                    {
+                        _exerciseService.DeleteRoutine(SelectedItem.Data.Id);
+                        RaisePropertyChanged("CurrentPerson");
+                        RaisePropertyChanged("ExerciseData");
+                    }
+                });
+            }
+        }
+
+        public MvvmCommand EditEntry
+        {
+            get
+            {
+                return new MvvmCommand(o =>
+                {
+                    if (SelectedItem == null)
+                        return;
+                    var viewModel = new AddEntryViewModel(_navigationManager, _exerciseService, SelectedItem.Data);
+                    _navigationManager.Push(viewModel);
+                });
+            }
+        }
+
         public Person CurrentPerson
         {
             get
@@ -149,18 +183,22 @@ namespace GymBro.ViewModels
                     Date = ex.PerformedOn.ToString("dd-MMM-yyyy"),
                     BackColor = ex.Person.ColorCode,
                     Initials = ex.Person.Initials,
-                    Info = String.Format("Sets: {0} | Reps: {1} | Weight: {2}", ex.NumberOfSets, ex.NumberOfReps, ex.WeightInKilos)
+                    Info = String.Format("Sets: {0} | Reps: {1} | Weight: {2}", ex.NumberOfSets, ex.NumberOfReps, ex.WeightInKilos),
+                    Data = ex
                 })
                 .GroupBy(ex => ex.Date);
             }
         }
 
+        public ExerciseInfo SelectedItem { get; set; }
+
         public override void OnActivating()
         {            
             OptionsVisible = false;
-            RaisePropertyChanged("PersonData");
             _exercise = _exerciseService.GetExercises().Single(ex => ex.Id == _exercise.Id);
             RaisePropertyChanged("ExerciseName");
+            RaisePropertyChanged("CurrentPerson");
+            RaisePropertyChanged("ExerciseData");
         }
     }
 
@@ -170,6 +208,7 @@ namespace GymBro.ViewModels
         public String BackColor { get; set; }
         public String Initials { get; set; }
         public String Info { get; set; }
+        public Routine Data { get; set; }
     }
 
     public class Grouping<TKey, TData> : ObservableCollection<TData>

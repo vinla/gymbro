@@ -70,9 +70,17 @@ namespace GymBro.Data
             return routines;
         }
 
-        public void AddRoutine(Routine routine)
+        public void AddEditRoutine(Routine routine)
         {
-            _connection.Insert(routine);
+            if (routine.Id > 0)
+                _connection.Update(routine);
+            else
+                _connection.Insert(routine);
+        }
+
+        public void DeleteRoutine(Int32 routineId)
+        {
+            _connection.Execute("delete from Routine where Id = ?", routineId);
         }
     }
 }

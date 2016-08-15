@@ -9,6 +9,7 @@ namespace GymBro.ViewModels
     {
         private readonly NavigationManager _navigationManager;
         private readonly ExerciseService _exerciseService;
+        private readonly Routine _routine;
         private readonly Exercise _exercise;
         private readonly Person _person;
 
@@ -17,25 +18,54 @@ namespace GymBro.ViewModels
         {
             _navigationManager = navigationManager;
             _exerciseService = exerciseService;
-            _exercise = exercise;
-            _person = person;
-            NumberOfReps = 12;
-            NumberOfSets = 4;
-            WeightInKilos = 10;
-            PerformedOn = DateTime.Today;
+            _routine = new Routine
+            {
+                Id = 0,
+                Exercise = exercise,
+                ExerciseId = exercise.Id,
+                Person = person,
+                PersonId = person.Id,
+                NumberOfReps = 12,
+                NumberOfSets = 4,
+                WeightInKilos = 10,
+                PerformedOn = DateTime.Today
+            };            
         }
 
-        public Exercise Exercise => _exercise;
+        public AddEntryViewModel(NavigationManager navigationManager, ExerciseService exerciseService, Routine existingRoutine)
+        {
+            _navigationManager = navigationManager;
+            _exerciseService = exerciseService;
+            _routine = existingRoutine;
+        }
 
-        public Person Person => _person;
+        public Exercise Exercise => _routine.Exercise;
 
-        public Int32 NumberOfReps { get; set; }
+        public Person Person => _routine.Person;
 
-        public Int32 NumberOfSets { get; set; }
+        public Int32 NumberOfReps
+        {
+            get { return _routine.NumberOfReps; }
+            set { _routine.NumberOfReps = value; }
+        }
 
-        public Single WeightInKilos { get; set; }
+        public Int32 NumberOfSets
+        {
+            get { return _routine.NumberOfSets; }
+            set { _routine.NumberOfSets = value; }
+        }
 
-        public DateTime PerformedOn { get; set; }
+        public Single WeightInKilos
+        {
+            get { return _routine.WeightInKilos; } 
+            set { _routine.WeightInKilos = value; }
+        }
+
+        public DateTime PerformedOn
+        {
+            get { return _routine.PerformedOn; }
+            set { _routine.PerformedOn = value; }
+        }
 
         public DateTime MinDate { get { return new DateTime(2000,1,1);} }
 
@@ -46,17 +76,8 @@ namespace GymBro.ViewModels
             get
             {
                 return new MvvmCommand(o =>
-                {
-                    var newRoutine = new Routine
-                    {
-                        ExerciseId = _exercise.Id,                                                
-                        PersonId = _person.Id,
-                        NumberOfReps = NumberOfReps,
-                        NumberOfSets = NumberOfSets,
-                        PerformedOn = PerformedOn,
-                        WeightInKilos = WeightInKilos
-                    };
-                    _exerciseService.AddRoutine(newRoutine);
+                {                    
+                    _exerciseService.AddEditRoutine(_routine);
                     _navigationManager.Return();                    
                 });
             }

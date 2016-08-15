@@ -34,6 +34,7 @@
     </Frame>
     <ListView 
              ItemsSource="{Binding ExerciseData}"
+             SelectedItem="{Binding SelectedItem}"
              IsGroupingEnabled="True"
              GroupDisplayBinding="{Binding Key}"
              HasUnevenRows="True"
@@ -61,6 +62,22 @@
       </ListView.ItemTemplate>
     </ListView>
   </StackLayout>
+  <Image
+     RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.90}"
+     RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.02}"
+     HeightRequest="48" WidthRequest="48" Source="delete.png">
+    <Image.GestureRecognizers>
+      <TapGestureRecognizer Command="{Binding DeleteEntry}" />
+    </Image.GestureRecognizers>
+  </Image>
+  <Image
+     RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.90}"
+     RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.2}"
+     HeightRequest="48" WidthRequest="48" Source="edit.png">
+    <Image.GestureRecognizers>
+      <TapGestureRecognizer Command="{Binding EditEntry}" />
+    </Image.GestureRecognizers>
+  </Image>
   <Image
      RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.90}"
      RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0.85}"
